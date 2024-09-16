@@ -125,6 +125,16 @@ Security
 
 All user data is handled securely with Spring Security (12 layers of security). Passwords are hashed securely during registration and verified during login. Sensitive data like payment details are processed in compliance with security standards.
 
+Implementation 
+
+To get the app running you will need docker installed on your system as the entire app is containerised with docker.
+
+Each service is containerised and finally all the services are pushed to the docker hud and this repo contains the single docker compose file which will get the app running with all the services enabled.
+
+command to start the site
+
+docker compose up
+
 Contact
 
 For any issues, questions, or feature requests, please feel free to contact the project team at [itskishoresn@gmail.com].
