@@ -127,4 +127,4 @@ All user data is handled securely with Spring Security (12 layers of security). 
 
 Contact
 
-For any issues, questions, or feature requests, please feel free to contact the project team at [your-email@example.com].
+For any issues, questions, or feature requests, please feel free to contact the project team at [itskishoresn@gmail.com].
