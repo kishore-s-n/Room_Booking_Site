@@ -1,4 +1,3 @@
-
 Room Hosting Management System
 
 Overview
@@ -131,9 +130,17 @@ To get the app running you will need docker installed on your system as the enti
 
 Each service is containerised and finally all the services are pushed to the docker hud and this repo contains the single docker compose file which will get the app running with all the services enabled.
 
-command to start the site
+command to start the site you will need the database set up to set up the specified and required databases clone the given repo 
+
+https://github.com/kishore-s-n/hotelSite_ms_Db_docker
+
+then run the given command which will spin up a container that sets up all the databases which uses bash scripting to create those databases
 
 docker compose up
+
+then use the docker compose file of this repo to get the site running by the command
+
+docker compose up 
 
 Contact
 
