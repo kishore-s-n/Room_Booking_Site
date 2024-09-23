@@ -101,15 +101,41 @@ Data Model:
 - reportDetails
 - reportDate
 
+
+Review Service (Node.js - 8087)
+
+This is a simple service that handles the reviews of the hosts and the rooms as the upcoming renter will be able to leave a review after the booking is completed and to let others know about the curret situations and updations.
+
+There are two seperate services for the hosts and the rooms so it will be easier to handle and to modify in future.
+
+Room Review Data Model:
+-  reviewId (Primary Key)
+-  roomId (Foreign Key)
+-  comment 
+-  rating
+
+Host Review Data Model:
+-  reviewId (Primary Key)
+-  hostId (Foreign Key)
+-  comment 
+-  rating
+
+
+SERVICE REGISTRY AND SERVICE DISCOVERY
+
+Netlfix Eureka Server
+
+This is a netfilx eureka server to get all the services and to know about their status, This is currently a Sping Boot serice as a Eureka Server.
+
 How to Run
 
 Each microservice is hosted on a separate port and can be started individually. Ensure that the required ports (8081-8086) are free, and follow the steps below to start each service:
 
-1. Spring Boot Services (Customer, Booking, Payment)
+1. Spring Boot Services (Customer, Booking, Payment, Eureka)
    cd [service-name]
    ./mvnw spring-boot:run
 
-2. Node.js Services (Host, Rooms, Report)
+2. Node.js Services (Host, Rooms, Report, Reviews)
    cd [service-name]
    npm install
    npm start
