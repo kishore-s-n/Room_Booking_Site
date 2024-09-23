@@ -18,6 +18,8 @@ Customer/User          Spring Boot   8083
 Host                   Node.js       8084
 Report                 Node.js       8085
 Rooms                  Node.js       8086
+Review                 Node.js       8087
+Netflix Eureka         Spring Boot   8761
 
 The Spring Boot microservices are chosen for secure handling of sensitive data (e.g., customer and payment details) due to their robust security features (e.g., Spring Security’s 12 layers of protection). The Node.js microservices are utilized for faster, scalable data operations related to hosts, rooms, and reports.
 
