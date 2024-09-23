@@ -1,12 +1,11 @@
 version: "3.8"
 
 services:
-  # React Frontend
-  react-app:
-    image: itskishore/frontend_react_roomsite
-    container_name: react-app
+  eureka:
+    image: itskishore/service-registry_roomsite
+    container_name: eureka-service-registry_roomsite
     ports:
-      - "5173:5173"
+      - "8761:8761"
     networks:
       - app-network
 
@@ -14,52 +13,131 @@ services:
   customer-user-service:
     image: itskishore/user_ms_roomsite
     container_name: customer-user-service
+    environment:
+      DATABASE_URL: "postgresql://root:root@postgres:5432/hosts"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
+      EUREKA_URL: "http://eureka:8761/eureka"
     ports:
       - "8083:8083"
     networks:
       - app-network
+    depends_on:
+      - postgres
+      - eureka
 
   booking-service:
     image: itskishore/booking_ms_roomsite
     container_name: booking-service
+    environment:
+      DATABASE_URL: "postgresql://root:root@postgres:5432/booking"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
+      EUREKA_URL: "http://eureka:8761/eureka"
     ports:
       - "8081:8081"
     networks:
       - app-network
+    depends_on:
+      - eureka
+      - postgres
 
   payment-service:
     image: itskishore/payment_ms_roomsite
     container_name: payment-service
+    environment:
+      DATABASE_URL: "postgresql://root:root@postgres:5432/payments"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
+      EUREKA_URL: "http://eureka:8761/eureka"
+      BOOKING_SERVICE_URL: "http://booking-service:8081"
     ports:
       - "8082:8082"
     networks:
       - app-network
-
+    depends_on:
+      - eureka
+      - postgres
   # Node.js Services
   host-service:
     image: itskishore/host_ms_roomsite
     container_name: host-service
+    environment:
+      DATABASE_URL: "postgresql://root:root@postgres:5432/hosts"
+      REVIEW_URL: "http://review-service:8087/api/review"
+      USER_URL: "http://user-service:8083/api/user"
+      PORT: 8084
     ports:
       - "8084:8084"
     networks:
       - app-network
-
+    depends_on:
+      - eureka
+      - postgres
   rooms-service:
     image: itskishore/room_ms_roomsite
     container_name: rooms-service
+    environment:
+      PORT: 8086
+      HOST_URL: "http://review-service:8087/api/review"
+      USER_URL: "http://host-service:8084/api/host"
+      DATABASE_URL: "postgresql://root:root@postgres:5432/rooms"
     ports:
       - "8086:8086"
     networks:
       - app-network
+    depends_on:
+      - eureka
+      - postgres
 
   report-service:
     image: itskishore/report_ms_roomsite
     container_name: report-service
+    environment:
+      DATABASE_URL: "postgresql://root:root@postgres:5432/reposts"
+      PORT: 8085
     ports:
       - "8085:8085"
     networks:
       - app-network
+    depends_on:
+      - eureka
+      - postgres
+
+  review-service:
+    image: itskishore/review_ms_roomsite
+    container_name: review-service
+    environment:
+      DATABASE_URL: "postgresql://root:root@postgres:5432/reposts"
+      PORT: 8087
+    ports:
+      - "8087:8087"
+    networks:
+      - app-network
+    depends_on:
+      - eureka
+      - postgres
+
+  #  PostgreSQL Database
+  postgres:
+    image: postgres
+    container_name: roomSiteDb
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: defaultdb # This database is created by default
+    networks:
+      - app-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistent data volume
+      - ./init-db:/docker-entrypoint-initdb.d/ # Initialization scripts
+    ports:
+      - "5432:5432"
 
 networks:
   app-network:
     driver: bridge
+volumes:
+  postgres_data:
+    driver: local
